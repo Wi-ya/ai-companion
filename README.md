@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Companion
 
-## Getting Started
+A Next.js web app that lets you chat with an AI companion. Pick a personality (Supportive, Witty, Calm, Curious, or Direct) and have a conversation. Built with the [Vercel AI SDK](https://sdk.vercel.ai), [Google Generative AI](https://ai.google.dev), and [shadcn](https://ui.shadcn.com).
 
-First, run the development server:
+## Setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Install dependencies** (includes `@ai-sdk/react` for the chat UI):
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```bash
+   npm install
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Add your API key**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   Copy the example env file and add your Google AI API key:
 
-## Learn More
+   ```bash
+   cp .env.example .env.local
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+   Edit `.env.local` and set:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```env
+   GOOGLE_GENERATIVE_AI_API_KEY=your_key_here
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   Get a key at [Google AI Studio](https://aistudio.google.com/apikey).
 
-## Deploy on Vercel
+3. **Run the dev server**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   Open [http://localhost:3000](http://localhost:3000). Choose a personality, then start chatting.
+
+## Project structure
+
+- **`app/page.tsx`** – Personality picker and chat UI (uses `useChat` from `@ai-sdk/react`).
+- **`app/api/chat/route.ts`** – Chat API route: streams responses with `streamText`, using the selected personality’s system prompt.
+- **`lib/personalities.ts`** – List of personalities (id, name, description, system prompt). Edit here to add or change personalities.
+
+## Tech
+
+- [Next.js](https://nextjs.org) (App Router)
+- [Vercel AI SDK](https://sdk.vercel.ai) (`ai`, `@ai-sdk/react`, `@ai-sdk/google`)
+- [shadcn](https://ui.shadcn.com) + Tailwind CSS
