@@ -17,52 +17,58 @@ function getNumeric(value: unknown, fallback: number): number {
   return num;
 }
 
-async function generateWithOpenRouter(body: ModelRequestBody) {
-  const key = process.env.OPENROUTER_API_KEY;
+async function generateWithHuggingFace(body: ModelRequestBody) {
+  const key = process.env.HUGGINGFACE_API_KEY;
   if (!key) {
     throw new Error(
-      "OPENROUTER_API_KEY is missing. Add it to .env.local to use the weaker external model."
+      "HUGGINGFACE_API_KEY is missing. Add it to .env.local to use the Hugging Face model."
     );
   }
 
-  const modelName = body.modelId.replace("openrouter:", "");
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "http://localhost:3000",
-      "X-Title": "AI Laboratory",
-    },
-    body: JSON.stringify({
-      model: modelName,
-      temperature: getNumeric(body.temperature, 0.9),
-      messages: [
-        { role: "system", content: body.systemPrompt ?? DEFAULT_SYSTEM },
-        { role: "user", content: body.prompt },
-      ],
-    }),
-  });
+  const modelName = body.modelId.replace("huggingface:", "");
+  const fullPrompt = `${body.systemPrompt ?? DEFAULT_SYSTEM}\n\nUser: ${body.prompt}\nAssistant:`;
 
-  const payload = (await response.json()) as {
-    error?: { message?: string };
-    choices?: Array<{ message?: { content?: string } }>;
-  };
+  const response = await fetch(
+    `https://api-inference.huggingface.co/models/${modelName}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        inputs: fullPrompt,
+        parameters: {
+          max_new_tokens: 300,
+          temperature: getNumeric(body.temperature, 0.7),
+          return_full_text: false,
+        },
+      }),
+    }
+  );
 
-  if (!response.ok) {
-    throw new Error(payload.error?.message ?? "OpenRouter request failed.");
+  const payload = (await response.json()) as
+    | Array<{ generated_text?: string }>
+    | { error?: string };
+
+  if (!response.ok || "error" in payload) {
+    const msg = "error" in payload ? payload.error : "Hugging Face request failed.";
+    throw new Error(msg ?? "Hugging Face request failed.");
   }
 
-  const text = payload.choices?.[0]?.message?.content?.trim();
+  const text = Array.isArray(payload)
+    ? payload[0]?.generated_text?.trim()
+    : undefined;
+
   if (!text) {
-    throw new Error("OpenRouter returned an empty response.");
+    throw new Error("Hugging Face returned an empty response.");
   }
 
   return {
     text,
     meta: {
       model: modelName,
-      provider: "openrouter",
+      provider: "huggingface",
     },
   };
 }
@@ -101,8 +107,8 @@ export async function POST(req: Request) {
       );
     }
 
-    if (body.modelId.startsWith("openrouter:")) {
-      const output = await generateWithOpenRouter(body);
+    if (body.modelId.startsWith("huggingface:")) {
+      const output = await generateWithHuggingFace(body);
       return Response.json(output);
     }
 

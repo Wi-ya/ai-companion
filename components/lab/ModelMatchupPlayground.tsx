@@ -17,21 +17,34 @@ interface ModelOption {
   note: string;
 }
 
-const models: ModelOption[] = [
+const googleModels: ModelOption[] = [
   {
     id: "google:gemini-2.5-flash",
     label: "Gemini 2.5 Flash",
-    note: "Latest and strongest — best reasoning and formatting",
+    note: "Latest — strongest reasoning and formatting",
   },
   {
-    id: "google:gemini-2.0-flash",
-    label: "Gemini 2.0 Flash",
-    note: "Mid-tier — capable but less nuanced than 2.5",
+    id: "google:gemini-2.0-flash-lite",
+    label: "Gemini 2.0 Flash-Lite",
+    note: "Smaller Google model — faster, less nuanced",
+  },
+];
+
+const hfModels: ModelOption[] = [
+  {
+    id: "huggingface:microsoft/Phi-3-mini-4k-instruct",
+    label: "Phi-3 Mini 4K (Microsoft)",
+    note: "3.8B params — small but instruction-tuned",
   },
   {
-    id: "google:gemini-1.0-pro",
-    label: "Gemini 1.0 Pro",
-    note: "Older generation — noticeably weaker on complex prompts",
+    id: "huggingface:mistralai/Mistral-7B-Instruct-v0.3",
+    label: "Mistral 7B Instruct",
+    note: "7B open-source model — noticeably rawer than Gemini",
+  },
+  {
+    id: "huggingface:TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    label: "TinyLlama 1.1B",
+    note: "Tiny 1.1B model — bare minimum, very limited responses",
   },
 ];
 
@@ -52,8 +65,8 @@ const prompts: PromptOption[] = [
 
 export function ModelMatchupPlayground() {
   const [promptId, setPromptId] = useState(prompts[0].id);
-  const [leftModelId, setLeftModelId] = useState(models[0].id);
-  const [rightModelId, setRightModelId] = useState(models[2].id); // defaults to Gemini 1.0 Pro
+  const [leftModelId, setLeftModelId] = useState(googleModels[0].id);
+  const [rightModelId, setRightModelId] = useState(hfModels[1].id);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [leftResult, setLeftResult] = useState<LabResult | null>(null);
@@ -154,24 +167,27 @@ export function ModelMatchupPlayground() {
             setModelId: setRightModelId,
             result: rightResult,
           },
-        ] as const).map((column) => (
+        ] as const).map((column) => {
+          const optionList = column.side === "left" ? googleModels : hfModels;
+          const allModels = [...googleModels, ...hfModels];
+          return (
           <div key={column.side} className="rounded-xl border border-border bg-card p-4">
             <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              {column.side === "left" ? "Left Model" : "Right Model"}
+              {column.side === "left" ? "Left — Google Model" : "Right — Hugging Face Model"}
             </h3>
             <select
               value={column.modelId}
               onChange={(event) => column.setModelId(event.target.value)}
               className="mt-3 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
-              {models.map((model) => (
+              {optionList.map((model) => (
                 <option key={model.id} value={model.id}>
                   {model.label}
                 </option>
               ))}
             </select>
             <p className="mt-2 text-xs text-muted-foreground">
-              {models.find((model) => model.id === column.modelId)?.note}
+              {allModels.find((model) => model.id === column.modelId)?.note}
             </p>
 
             <div className="mt-4 rounded-md border border-border bg-background p-3 text-sm">
@@ -189,12 +205,13 @@ export function ModelMatchupPlayground() {
               )}
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="rounded-md bg-muted p-3 text-xs text-muted-foreground">
-        All models use the same Google AI API key. Older models respond noticeably
-        differently on complex reasoning prompts.
+        Left uses <code>GOOGLE_GENERATIVE_AI_API_KEY</code>. Right uses{" "}
+        <code>HUGGINGFACE_API_KEY</code> — get a free token at huggingface.co/settings/tokens.
       </div>
 
       <div className="flex items-center gap-3">
