@@ -29,8 +29,8 @@ const models: ModelOption[] = [
     note: "Smaller baseline in same provider",
   },
   {
-    id: "openrouter:qwen/qwen2.5-3b-instruct:free",
-    label: "Qwen 2.5 3B Instruct (OpenRouter)",
+    id: "openrouter:meta-llama/llama-3.2-3b-instruct:free",
+    label: "Llama 3.2 3B Instruct (OpenRouter)",
     note: "External weaker model via a different API",
   },
 ];
