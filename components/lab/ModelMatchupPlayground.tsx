@@ -21,27 +21,17 @@ const models: ModelOption[] = [
   {
     id: "google:gemini-2.5-flash",
     label: "Gemini 2.5 Flash",
-    note: "Primary stronger model (Google AI Studio)",
+    note: "Latest and strongest — best reasoning and formatting",
   },
   {
-    id: "google:gemini-2.0-flash-lite",
-    label: "Gemini 2.0 Flash-Lite",
-    note: "Smaller baseline in same provider",
+    id: "google:gemini-2.0-flash",
+    label: "Gemini 2.0 Flash",
+    note: "Mid-tier — capable but less nuanced than 2.5",
   },
   {
-    id: "openrouter:meta-llama/llama-3.2-3b-instruct:free",
-    label: "Llama 3.2 3B (OpenRouter)",
-    note: "External weaker model via a different API",
-  },
-  {
-    id: "openrouter:microsoft/phi-3-mini-128k-instruct:free",
-    label: "Phi-3 Mini (OpenRouter)",
-    note: "Microsoft's small model via OpenRouter",
-  },
-  {
-    id: "openrouter:google/gemma-3-1b-it:free",
-    label: "Gemma 3 1B (OpenRouter)",
-    note: "Google's smallest model via OpenRouter",
+    id: "google:gemini-1.0-pro",
+    label: "Gemini 1.0 Pro",
+    note: "Older generation — noticeably weaker on complex prompts",
   },
 ];
 
@@ -63,7 +53,7 @@ const prompts: PromptOption[] = [
 export function ModelMatchupPlayground() {
   const [promptId, setPromptId] = useState(prompts[0].id);
   const [leftModelId, setLeftModelId] = useState(models[0].id);
-  const [rightModelId, setRightModelId] = useState(models[2].id);
+  const [rightModelId, setRightModelId] = useState(models[2].id); // defaults to Gemini 1.0 Pro
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [leftResult, setLeftResult] = useState<LabResult | null>(null);
@@ -203,8 +193,8 @@ export function ModelMatchupPlayground() {
       </div>
 
       <div className="rounded-md bg-muted p-3 text-xs text-muted-foreground">
-        If the OpenRouter model is selected, set `OPENROUTER_API_KEY` in
-        `.env.local`. Google models use `GOOGLE_GENERATIVE_AI_API_KEY`.
+        All models use the same Google AI API key. Older models respond noticeably
+        differently on complex reasoning prompts.
       </div>
 
       <div className="flex items-center gap-3">
