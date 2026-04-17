@@ -30,8 +30,18 @@ const models: ModelOption[] = [
   },
   {
     id: "openrouter:meta-llama/llama-3.2-3b-instruct:free",
-    label: "Llama 3.2 3B Instruct (OpenRouter)",
+    label: "Llama 3.2 3B (OpenRouter)",
     note: "External weaker model via a different API",
+  },
+  {
+    id: "openrouter:microsoft/phi-3-mini-128k-instruct:free",
+    label: "Phi-3 Mini (OpenRouter)",
+    note: "Microsoft's small model via OpenRouter",
+  },
+  {
+    id: "openrouter:google/gemma-3-1b-it:free",
+    label: "Gemma 3 1B (OpenRouter)",
+    note: "Google's smallest model via OpenRouter",
   },
 ];
 
