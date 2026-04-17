@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import type { Personality } from "@/lib/personalities";
 
@@ -67,6 +68,12 @@ export function ChatView({
               {personality.name}
             </span>
           </div>
+          <Link
+            href="/learn/temperature"
+            className="rounded-md border border-border px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            Learn how behavior is controlled
+          </Link>
         </div>
       </header>
 

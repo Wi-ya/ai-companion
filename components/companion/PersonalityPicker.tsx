@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { Personality } from "@/lib/personalities";
 import { PERSONALITIES } from "@/lib/personalities";
 
@@ -36,6 +37,14 @@ export function PersonalityPicker({
             {title}
           </h1>
           <p className="text-muted-foreground">{description}</p>
+          <p>
+            <Link
+              href="/learn/temperature"
+              className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              Jump straight into the AI behavior labs
+            </Link>
+          </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           {personalities.map((p) => (

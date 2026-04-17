@@ -1,0 +1,15 @@
+OVERVIEW
+
+Purpose
+
+This project is meant to be part companion app and part lesson. The big idea is to help people see how AI chatbots really work—not like a person thinking, but like a system that follows rules and dials you usually never see. It borrows from the “Chinese Room” idea: the app can feel smart or caring because of how we phrase instructions and tune settings, not because it has feelings.
+
+You can chat with different “personalities” and, over time, explore what is usually hidden behind the scenes: things like how random or strict the next word is, how much of the vocabulary it is allowed to use, how it avoids repeating itself, how much of the conversation it is allowed to remember, and how bigger or smaller AI models behave differently. The hope is small, clear explanations plus simple side-by-side tries so people can change one thing at a time and watch what happens.
+
+Who it is for
+
+Anyone who is curious, especially people who are not studying computer science and want a plain-language look at what goes on under the hood when they talk to an assistant. No background is assumed.
+
+AI used
+
+The conversations are powered by Google’s Gemini model (for example Gemini 2.5 Flash). That is the main external AI piece this project relies on.

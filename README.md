@@ -22,9 +22,10 @@ A Next.js web app that lets you chat with an AI companion. Pick a personality (S
 
    ```env
    GOOGLE_GENERATIVE_AI_API_KEY=your_key_here
+   OPENROUTER_API_KEY=your_openrouter_key_here
    ```
 
-   Get a key at [Google AI Studio](https://aistudio.google.com/apikey).
+   Get keys at [Google AI Studio](https://aistudio.google.com/apikey) and [OpenRouter](https://openrouter.ai/keys). The OpenRouter key is used by the model comparison lab for the weaker external model.
 
 3. **Run the dev server**
 
@@ -38,6 +39,9 @@ A Next.js web app that lets you chat with an AI companion. Pick a personality (S
 
 - **`app/page.tsx`** – Personality picker and chat UI (uses `useChat` from `@ai-sdk/react`).
 - **`app/api/chat/route.ts`** – Chat API route: streams responses with `streamText`, using the selected personality’s system prompt.
+- **`app/learn/*`** – Parameter labs with theory/playground tabs and side-by-side comparison UI.
+- **`app/api/lab/route.ts`** – Generic lab generation route for parameter A/B tests.
+- **`app/api/model-matchup/route.ts`** – Model showdown route (Google models + weaker external OpenRouter model).
 - **`lib/personalities.ts`** – List of personalities (id, name, description, system prompt). Edit here to add or change personalities.
 
 ## Tech

@@ -1,0 +1,23 @@
+REFLECTIVE ANALYSIS
+
+What I set out to do
+
+My overview describes this as both a companion app and a lesson: help people see that chatbots follow rules and hidden settings, not real feelings, using ideas like the Chinese Room. My plan turns that into a full “AI Laboratory” with a main chat and, later, separate labs where each knob (temperature, top-p, penalties, memory, model size) can be changed in isolation with theory plus side-by-side playgrounds. The audience I care about is broad, especially people who are not CS majors and want plain-language insight into what happens when they talk to an assistant.
+
+What I have done so far
+
+I built the first vertical slice of the companion experience on the home page. Users pick one of five personalities—Supportive, Witty, Calm, Curious, or Direct—each defined in code with its own name, short description, and system prompt. After they choose, they get a simple chat screen: messages stream back from the model, they can go back to change personality, and each send passes the chosen personality id to the server so the right instructions stay attached to the conversation.
+
+On the backend I wired a single chat API that reads the message history, looks up the personality’s system prompt (or a default if something is missing), and streams replies from Google Gemini 2.5 Flash. So the “illusion” of different companions is already concrete: same model, different system text—aligned with the thesis that behavior is engineered, not felt.
+
+What is not built yet (compared to the plan)
+
+The learning routes are still ahead of me. I have not added pages for temperature, top-p, penalties, context window, or model comparison. Each of those is supposed to use tabs for theory versus playground, fixed prompts for demos, and two parallel requests so left and right outputs differ only by the one parameter being taught. My plan also mentioned a call-to-action from the main chat toward “learning how AI behavior is controlled”; that hook is in the document but not in the UI yet.
+
+What I plan to do next
+
+I intend to implement those labs one at a time, in the spirit of progressive disclosure: keep the main chat as the friendly entry, then deepen into each parameter with short explanations and A/B views. I will follow the demo strategy from the plan—predetermined prompts in playgrounds and simultaneous generations—so comparisons stay clear for presentations. For the main chat, if I later expose many controls at once, the plan suggests a flexible request shape or template so I do not duplicate logic; the labs themselves should stay simple: same system prompt and messages, only the parameter under study changes. I am also not planning to add tool-calling for external services; teaching stays focused on text generation and app-controlled prompts.
+
+Reflection
+
+So far my work proves the core story in a small way: personalities are data plus system prompts, and the model responds accordingly. That matches both my overview and the opening of my plan. The labs still ahead are what will really teach—showing settings users never see in a normal chat. Until those ship, the “laboratory” lives mainly in the plan, not in the app.
