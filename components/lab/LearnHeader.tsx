@@ -21,7 +21,7 @@ export function LearnHeader({ title, subtitle }: LearnHeaderProps) {
               href="/"
               className="text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              ← Back to main chat
+              ← Home
             </Link>
             <h1 className="mt-2 text-2xl font-semibold tracking-tight">{title}</h1>
             <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>

@@ -47,13 +47,30 @@ async function generateWithHuggingFace(body: ModelRequestBody) {
     }
   );
 
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) {
+    if (response.status === 503) {
+      throw new Error(
+        "The Hugging Face model is still loading. Wait 20–30 seconds and try again."
+      );
+    }
+    throw new Error(
+      `Hugging Face returned an unexpected response (HTTP ${response.status}). The model may be unavailable.`
+    );
+  }
+
   const payload = (await response.json()) as
     | Array<{ generated_text?: string }>
-    | { error?: string };
+    | { error?: string; estimated_time?: number };
 
   if (!response.ok || "error" in payload) {
-    const msg = "error" in payload ? payload.error : "Hugging Face request failed.";
-    throw new Error(msg ?? "Hugging Face request failed.");
+    const msg =
+      "error" in payload ? payload.error : "Hugging Face request failed.";
+    const eta =
+      "estimated_time" in payload && payload.estimated_time
+        ? ` (estimated wait: ${Math.ceil(payload.estimated_time)}s)`
+        : "";
+    throw new Error((msg ?? "Hugging Face request failed.") + eta);
   }
 
   const text = Array.isArray(payload)
