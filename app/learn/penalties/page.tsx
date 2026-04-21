@@ -2,16 +2,22 @@ import { ABPlayground, LearnHeader, TheoryPlaygroundTabs } from "@/components/la
 
 const promptOptions = [
   {
-    id: "story",
-    label: "Travel Story",
+    id: "love",
+    label: "Write About Love",
     prompt:
-      "Write a short travel story about getting lost in a city and finding your way.",
+      "Write a short paragraph about what love means to you.",
   },
   {
-    id: "brainstorm",
-    label: "Brainstorm Session",
+    id: "city",
+    label: "Describe a City",
     prompt:
-      "Brainstorm ideas for a school event theme and explain each in one sentence.",
+      "Describe what it feels like to walk through a busy city at night.",
+  },
+  {
+    id: "success",
+    label: "Define Success",
+    prompt:
+      "Write a motivational paragraph about what it means to be successful.",
   },
 ];
 
@@ -24,28 +30,43 @@ export default function PenaltiesLabPage() {
       />
       <TheoryPlaygroundTabs
         theory={
-          <div className="rounded-xl border border-border bg-card p-5">
+          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
             <h2 className="text-lg font-semibold">Point deductions for tokens</h2>
-            <div className="mt-3 space-y-2 text-sm text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Frequency penalty discourages repeating the same words by reducing
-                their future probability each time they appear.
+                After picking a word, the model secretly adjusts future word
+                probabilities based on what it has already said. Penalties are how
+                you make it penalise itself for being repetitive.
               </p>
               <p>
-                Presence penalty discourages returning to already-used topics even if
-                the exact words differ.
+                <span className="font-medium text-foreground">Frequency penalty</span> — every
+                time a word appears in the output, its future probability gets nudged
+                down. So the more you use a word, the less likely you are to use it
+                again. With no penalty, ask the model about love and you might get:
+                <span className="italic"> "Love is love. Love connects us. Love is what love does."</span>
+                — same word, endlessly.
               </p>
               <p>
-                High penalties can produce odd synonym hopping or sudden topic
-                shifts, showing behavior is math-constrained rather than understood.
+                <span className="font-medium text-foreground">Presence penalty</span> — any
+                word that has appeared at all gets a one-time penalty, discouraging
+                the model from returning to topics it already touched on — even with
+                different words. High presence penalty can cause sudden topic jumps mid-paragraph.
               </p>
+              <p>
+                Crank both penalties to maximum and you'll see the model start
+                synonym-hopping desperately: <span className="italic">"Affection is a bond. Tenderness connects souls. Devotion binds individuals."</span> — it is avoiding "love" entirely because it already appeared. The math is driving the language, not meaning.
+              </p>
+              <div className="rounded-md border border-border bg-background p-3">
+                <p className="font-medium text-foreground text-xs uppercase tracking-wide mb-1">Try this</p>
+                <p>Use "Write About Love". Set left penalties to <span className="font-mono">0</span> and right to frequency <span className="font-mono">1.5</span> + presence <span className="font-mono">1.5</span>. Watch the right side avoid the word "love" like it owes it money.</p>
+              </div>
             </div>
           </div>
         }
         playground={
           <ABPlayground
             title="A/B Penalty Playground"
-            description="Compare low-penalty coherence against high-penalty drift."
+            description="Compare low-penalty coherence against high-penalty drift. Try a repetitive topic for the clearest effect."
             promptOptions={promptOptions}
             controls={[
               {
@@ -55,7 +76,7 @@ export default function PenaltiesLabPage() {
                 max: 2,
                 step: 0.1,
                 leftDefault: 0,
-                rightDefault: 1.3,
+                rightDefault: 1.5,
               },
               {
                 key: "presencePenalty",

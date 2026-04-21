@@ -14,7 +14,7 @@ export default function ModelsLabPage() {
 
         <div className="mx-auto max-w-md space-y-4">
           <h2 className="text-2xl font-bold">
-            Oops. Nothing to see here. Yet.
+            Oops. Nothing to see here. Yet. Sorry prof. Unreliable APIs for weaker models.
           </h2>
           <p className="text-muted-foreground text-sm">
             This lab is still under construction. The hard hat crew is working

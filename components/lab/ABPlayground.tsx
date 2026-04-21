@@ -44,6 +44,8 @@ function buildDefaults(
   }, {});
 }
 
+const CUSTOM_ID = "__custom__";
+
 export function ABPlayground({
   title,
   description,
@@ -52,6 +54,7 @@ export function ABPlayground({
   systemPrompt = DEFAULT_SYSTEM_PROMPT,
 }: ABPlaygroundProps) {
   const [promptId, setPromptId] = useState(promptOptions[0]?.id ?? "");
+  const [customText, setCustomText] = useState("");
   const [leftValues, setLeftValues] = useState(() => buildDefaults(controls, "left"));
   const [rightValues, setRightValues] = useState(() => buildDefaults(controls, "right"));
   const [loading, setLoading] = useState(false);
@@ -59,13 +62,16 @@ export function ABPlayground({
   const [leftResult, setLeftResult] = useState<LabResult | null>(null);
   const [rightResult, setRightResult] = useState<LabResult | null>(null);
 
-  const selectedPrompt = useMemo(
-    () => promptOptions.find((prompt) => prompt.id === promptId) ?? promptOptions[0],
-    [promptId, promptOptions]
-  );
+  const isCustom = promptId === CUSTOM_ID;
+
+  const selectedPrompt = useMemo(() => {
+    if (isCustom) return { id: CUSTOM_ID, label: "Custom", prompt: customText };
+    return promptOptions.find((prompt) => prompt.id === promptId) ?? promptOptions[0];
+  }, [promptId, promptOptions, isCustom, customText]);
 
   const runComparison = async () => {
     if (!selectedPrompt) return;
+    if (isCustom && !customText.trim()) return;
     setLoading(true);
     setError(null);
     setLeftResult(null);
@@ -150,12 +156,33 @@ export function ABPlayground({
               </button>
             );
           })}
+          <button
+            type="button"
+            onClick={() => setPromptId(CUSTOM_ID)}
+            className={`rounded-md border px-3 py-1.5 text-sm ${
+              isCustom
+                ? "border-foreground bg-foreground text-background"
+                : "border-border bg-background hover:bg-muted"
+            }`}
+          >
+            ✏️ My own prompt
+          </button>
         </div>
 
-        {selectedPrompt && (
-          <p className="mt-3 rounded-md bg-muted p-3 text-sm text-foreground">
-            <span className="font-medium">Prompt:</span> {selectedPrompt.prompt}
-          </p>
+        {isCustom ? (
+          <textarea
+            value={customText}
+            onChange={(e) => setCustomText(e.target.value)}
+            placeholder="Type your own prompt here and run side-by-side…"
+            rows={3}
+            className="mt-3 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+          />
+        ) : (
+          selectedPrompt && (
+            <p className="mt-3 rounded-md bg-muted p-3 text-sm text-foreground">
+              <span className="font-medium">Prompt:</span> {selectedPrompt.prompt}
+            </p>
+          )
         )}
       </div>
 
@@ -220,7 +247,7 @@ export function ABPlayground({
         <button
           type="button"
           onClick={runComparison}
-          disabled={loading || !selectedPrompt}
+          disabled={loading || !selectedPrompt || (isCustom && !customText.trim())}
           className="rounded-md border border-foreground bg-foreground px-4 py-2 text-sm font-medium text-background disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? "Generating both sides..." : "Generate side-by-side"}

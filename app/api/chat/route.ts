@@ -25,12 +25,15 @@ export async function POST(req: Request) {
   const personality = personalityId ? getPersonalityById(personalityId) : undefined;
   const systemPrompt = personality?.systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
 
+  // Only pass the last 3 messages to the model — older context is dropped.
+  const recentMessages = messages.slice(-3);
+
   try {
     const google = createGoogleGenerativeAI({ apiKey });
     const result = streamText({
       model: google("gemini-2.5-flash"),
       system: systemPrompt,
-      messages: await convertToModelMessages(messages),
+      messages: await convertToModelMessages(recentMessages),
     });
     return result.toUIMessageStreamResponse();
   } catch (err) {

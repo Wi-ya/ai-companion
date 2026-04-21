@@ -1,5 +1,14 @@
 import Link from "next/link";
 
+const FEATURE_LINKS: Record<string, string> = {
+  "Temperature": "/learn/temperature",
+  "Top-P & Top-K": "/learn/top-p",
+  "Frequency & Presence Penalties": "/learn/penalties",
+  "Context Window (Memory)": "/learn/memory",
+  "Model Size": "/learn/models",
+  "Personalities": "/chat",
+};
+
 export default function LandingPage() {
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">
@@ -107,21 +116,31 @@ export default function LandingPage() {
             What you can explore
           </h2>
           <p className="mt-2 text-center text-sm text-muted-foreground">
-            No CS background needed. Change one thing at a time and watch what
-            happens.
+            No CS background needed. Change one thing at a time and watch what happens.
           </p>
+          <div className="mt-5 mx-auto max-w-2xl rounded-xl border border-border bg-card p-5 text-sm text-muted-foreground space-y-2">
+            <p className="font-medium text-foreground">Every AI reply is shaped by hidden parameters.</p>
+            <p>
+              A <span className="font-medium text-foreground">parameter</span> is just a number you dial up or down before the model generates a response. You never see these in a normal chat app — but they are always there, silently deciding how creative, how repetitive, how forgetful, or how cautious the reply will be.
+            </p>
+            <p>
+              The labs below let you change <span className="italic">one parameter at a time</span>, send the exact same prompt to both sides, and compare what comes back. That is the whole trick — isolate a variable, observe the effect.
+            </p>
+          </div>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((f) => (
-              <div
+              <Link
                 key={f.title}
-                className="rounded-xl border border-border bg-card p-5 space-y-1.5 transition-colors hover:border-primary/40"
+                href={FEATURE_LINKS[f.title] ?? "/"}
+                className="rounded-xl border border-border bg-card p-5 space-y-1.5 transition-all hover:border-primary/40 card-glow block"
               >
                 <p className="text-sm font-semibold">
                   <span className="mr-2">{f.icon}</span>
                   {f.title}
                 </p>
                 <p className="text-sm text-muted-foreground">{f.description}</p>
-              </div>
+                <p className="text-xs gradient-text font-medium pt-1">Go →</p>
+              </Link>
             ))}
           </div>
         </div>
