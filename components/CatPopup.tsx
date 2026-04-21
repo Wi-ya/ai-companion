@@ -20,9 +20,9 @@ const CAPTIONS = [
   "Frequency penalty high. I will not say meow. I will not say—meow.",
 ];
 
-const MIN_INTERVAL_MS = 35_000;
-const MAX_INTERVAL_MS = 80_000;
-const DISPLAY_DURATION_MS = 8_000;
+const MIN_INTERVAL_MS = 20_000;
+const MAX_INTERVAL_MS = 50_000;
+const DISPLAY_DURATION_MS = 10_000;
 
 function randomBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -36,10 +36,26 @@ function randomCatUrl() {
     : `https://cataas.com/cat?width=300&height=220&t=${seed}`;
 }
 
+const POSITIONS = [
+  { style: { bottom: "1.5rem", right: "1.5rem" },  animateClass: "slide-in-from-bottom-6" },
+  { style: { bottom: "1.5rem", left: "1.5rem" },   animateClass: "slide-in-from-bottom-6" },
+  { style: { top: "1.5rem",   right: "1.5rem" },   animateClass: "slide-in-from-top-6" },
+  { style: { top: "1.5rem",   left: "1.5rem" },    animateClass: "slide-in-from-top-6" },
+  { style: { top: "40%",      right: "1.5rem" },   animateClass: "slide-in-from-right-6" },
+  { style: { top: "40%",      left: "1.5rem" },    animateClass: "slide-in-from-left-6" },
+  { style: { bottom: "30%",   right: "1.5rem" },   animateClass: "slide-in-from-right-6" },
+  { style: { bottom: "30%",   left: "1.5rem" },    animateClass: "slide-in-from-left-6" },
+];
+
+function randomPosition() {
+  return POSITIONS[Math.floor(Math.random() * POSITIONS.length)];
+}
+
 export function CatPopup() {
   const [visible, setVisible] = useState(false);
   const [catUrl, setCatUrl] = useState("");
   const [caption, setCaption] = useState("");
+  const [position, setPosition] = useState(POSITIONS[0]);
   const [dismissTimer, setDismissTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
 
   const dismiss = useCallback(() => {
@@ -50,6 +66,7 @@ export function CatPopup() {
   const showCat = useCallback(() => {
     setCatUrl(randomCatUrl());
     setCaption(CAPTIONS[Math.floor(Math.random() * CAPTIONS.length)]);
+    setPosition(randomPosition());
     setVisible(true);
     const t = setTimeout(() => setVisible(false), DISPLAY_DURATION_MS);
     setDismissTimer(t);
@@ -73,7 +90,10 @@ export function CatPopup() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-6 fade-in duration-500">
+    <div
+      className={`fixed z-50 animate-in ${position.animateClass} fade-in duration-500`}
+      style={position.style}
+    >
       <div className="relative w-[300px] overflow-hidden rounded-2xl border border-border bg-card shadow-2xl glow-primary transition-all">
         {/* close button */}
         <button

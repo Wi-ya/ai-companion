@@ -1,38 +1,40 @@
-import {
-  LearnHeader,
-  ModelMatchupPlayground,
-  TheoryPlaygroundTabs,
-} from "@/components/lab";
+import { LearnHeader } from "@/components/lab";
 
 export default function ModelsLabPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <LearnHeader
-        title="Model Size Lab"
-        subtitle="Run the same prompt on stronger and weaker models side-by-side."
+        title="Model Internals Lab"
+        subtitle="Coming soon — a look at what actually happens inside a model."
       />
-      <TheoryPlaygroundTabs
-        theory={
-          <div className="rounded-xl border border-border bg-card p-5">
-            <h2 className="text-lg font-semibold">David vs. Goliath models</h2>
-            <div className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <p>
-                Larger models usually sustain better formatting, coherence, and
-                nuance because they capture richer patterns.
-              </p>
-              <p>
-                Smaller models can still be useful but often sound more literal and
-                less robust on multi-step prompts.
-              </p>
-              <p>
-                This lab includes an external weaker model through a separate API so
-                the difference is visible in one interface.
-              </p>
-            </div>
+
+      <div className="flex flex-col items-center justify-center px-6 py-24 text-center">
+        {/* big construction sign */}
+        <div className="text-8xl mb-6 animate-bounce">🚧</div>
+
+        <div className="mx-auto max-w-md space-y-4">
+          <h2 className="text-2xl font-bold">
+            Oops. Nothing to see here. Yet.
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            This lab is still under construction. The hard hat crew is working
+            on it. They are mostly cats. Progress is slow.
+          </p>
+
+          {/* fake error terminal */}
+          <div className="rounded-xl border border-border bg-card p-4 text-left font-mono text-xs text-muted-foreground space-y-1">
+            <p><span className="text-green-400">$</span> load_model_lab.py</p>
+            <p className="text-yellow-400">WARNING: lab not found</p>
+            <p className="text-yellow-400">WARNING: still thinking about it</p>
+            <p className="text-red-400">ERROR: too many cats on keyboard</p>
+            <p><span className="text-green-400">$</span> <span className="animate-pulse">_</span></p>
           </div>
-        }
-        playground={<ModelMatchupPlayground />}
-      />
+
+          <p className="text-xs text-muted-foreground pt-2">
+            Check back later. Or don't. The cats will decide.
+          </p>
+        </div>
+      </div>
     </main>
   );
 }

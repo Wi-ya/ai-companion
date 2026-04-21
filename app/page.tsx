@@ -163,7 +163,7 @@ const FEATURES = [
     icon: "⚖️",
     title: "Model Size",
     description:
-      "Bigger models handle nuance and format better. Compare Gemini 2.5 Flash against a tiny 1B model side by side.",
+      "Bigger models handle nuance and format better. Compare Gemini 2.5 Flash against a smaller Gemini side by side.",
   },
   {
     icon: "🎭",
